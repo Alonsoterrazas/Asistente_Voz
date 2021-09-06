@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 pyttsx3 = "*"
 speechrecognition = "*"
-pyaudio = "*"
 pywhatkit = "*"
 spotipy = "*"
 python-decouple = "*"
