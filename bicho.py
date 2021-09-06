@@ -2,7 +2,6 @@ import pyttsx3
 import speech_recognition as sr
 import random
 
-
 engine = pyttsx3.init()
 rate = engine.getProperty('rate')
 engine.setProperty('rate', rate - 40)
@@ -20,9 +19,8 @@ def voz(message):
 # Escucha tu micrófono y te regresa el audio en texto
 def listen_action():
     with sr.Microphone() as fuente:
-        r.pause_threshold = 0.8
         print("estoy escuchando")
-        audio = r.listen(fuente)
+        audio = r.record(fuente, 3)
         try:
             q = r.recognize_google(audio, language="es")
             return q
@@ -37,12 +35,9 @@ def listen_action():
             return None
 
 
-def listen():
+def call():
     with sr.Microphone() as fuente:
-        #microfonos = fuente.list_microphone_names()
-        #for mic in microfonos:
-            #print(mic)
-        audio = r.listen(fuente)
+        audio = r.record(fuente, 3)
         try:
             q = r.recognize_google(audio, language="es")
             return q
@@ -52,39 +47,3 @@ def listen():
             return None
         except:
             return None
-
-#def prueba():
-   # for device_index in sr.Microphone.list_working_microphones():
-    #    m = sr.Microphone(device_index=device_index)
-     #   print(m)
-      #  break
-    #else:
-     #   print("No working microphones found!")
-
-def piedra_papel_tijeras():
-
-        posible_actions =  ["piedra", "papel", "tijeras"]
-        computer_action =  random.choice(posible_actions)
-        q = listen_action()
-        print(q)
-        if q == computer_action:
-            voz(' es un empate :)')
-        elif q == "piedra":
-           if computer_action == "tijeras":
-               voz(f"haz elegido {q} y la computadora ha elegido {computer_action} haz ganado!")
-           else:
-               voz(f"haz elegido {q} y la computadora ha elegido {computer_action}  el ganador soy yo, SIUUUU!")
-        elif q == "papel":
-            if computer_action == "piedra":
-                voz(f"haz elegido {q} y la computadora ha elegido {computer_action} el ganador eres tu!")
-            else:
-                voz(f"haz elegido {q} y la computadora ha elegido {computer_action} el ganador soy yo, SIUUUU!")
-        elif q == "tijeras":
-            if computer_action == "piedra":
-                voz(f"haz elegido {q} y la computadora ha elegido {computer_action} el ganador soy yo, SIUUUU!")
-            else:
-                voz(f"haz elegido {q} y la computadora ha elegido {computer_action} el ganador eres tu!")
-
-
-
-

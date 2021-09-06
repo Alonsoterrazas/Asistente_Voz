@@ -1,24 +1,11 @@
-from bicho import listen_action, voz, listen, piedra_papel_tijeras
+from bicho import listen_action, voz, call
+from Models.games import piedra_papel_tijeras
+from Controllers.SpotifyController import spotify_main
 import webbrowser
-import datetime
+import time
 import pywhatkit
 import os
-import yahoo_finance as yf
-import pyjokes
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 from decouple import config
-
-CLIENT_ID = config('SPOTIPY_CLIENT_ID')
-CLIENT_SECRET = config('SPOTIPY_CLIENT_SECRET')
-REDIRECT_URL = config('SPOTIPY_REDIRECT_URI')
-COMPUTADORA = config('COMPUTADORA_ID')
-CELULAR = config('CELULAR_ID')
-
-scopes = 'user-read-playback-state,user-modify-playback-state,user-read-currently-playing'
-
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL, scope=scopes))
-
 
 
 def querying():
@@ -41,33 +28,14 @@ def querying():
             pywhatkit.search(q)
             continue
 
-        if 'reproduce en spotify' in q:
-            q = q[20:]
-            voz(f'reproduciendo {q} en spotify, espere un momento')
-            sp.start_playback()
-
-        if 'siguiente canción' in q:
-            voz('cambiando de canción')
-            sp.next_track()
-
-        if 'pausa la canción' in q:
-            voz('pausando la cancion')
-            sp.pause_playback()
+        if 'spotify' in q:
+            spotify_main(q)
             continue
 
         if 'piedra papel o tijeras' in q:
             voz('preparate para el duelo')
             piedra_papel_tijeras()
             continue
-
-
-        if 'equipos' in q:
-            dispositivos = sp.devices()
-            dispositivos = dispositivos['devices']
-            for i in dispositivos:
-                print(i)
-
-
 
         if q == 'adiós':
             voz('tendre que dejar de luchar siuuuu')
@@ -82,16 +50,16 @@ def saludos():
 
 
 # función que espera a que digas la palabra magic
-def listener():
+def wait_for_call():
     while True:
-        v = listen()
+        v = call()
         v = v.lower() if v else None
         print(v)
-        if v == "okay bicho":
+        if v and 'okay bicho' in v:
             querying()
 
 
-listener()
+wait_for_call()
 
 
 
