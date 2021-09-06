@@ -1,5 +1,5 @@
 import re
-from Models.Spotify.playback import reanudar_playback, siguiente_cancion, pausar_playback, dispositivos
+from Models.Spotify.playback import reanudar_playback, siguiente_cancion, pausar_playback, dispositivos,get_token, reproducir_cancion
 from bicho import voz
 
 def spotify_main(q):
@@ -9,7 +9,7 @@ def spotify_main(q):
         index = q.find('en')
         q = q[10:index]
         voz(f'reproduciendo {q} en spotify, espere un momento')
-        if not reanudar_playback():
+        if not reproducir_cancion(q):
             voz('Ocurrió un error al reanudar la canción')
         return
 
@@ -25,4 +25,8 @@ def spotify_main(q):
 
     if 'equipos' in q:
         dispositivos()
+        return
+
+    if 'token' in q:
+        get_token()
         return

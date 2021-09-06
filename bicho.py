@@ -20,7 +20,7 @@ def voz(message):
 def listen_action():
     with sr.Microphone() as fuente:
         print("estoy escuchando")
-        audio = r.record(fuente, 3)
+        audio = r.record(fuente, 4)
         try:
             q = r.recognize_google(audio, language="es")
             return q
@@ -37,7 +37,7 @@ def listen_action():
 
 def call():
     with sr.Microphone() as fuente:
-        audio = r.record(fuente, 3)
+        audio = r.record(fuente, 4)
         try:
             q = r.recognize_google(audio, language="es")
             return q

@@ -1,6 +1,7 @@
 from bicho import listen_action, voz, call
 from Models.games import piedra_papel_tijeras
 from Controllers.SpotifyController import spotify_main
+from Models.Spotify.playback import *
 import webbrowser
 import time
 import pywhatkit
@@ -59,8 +60,8 @@ def wait_for_call():
             querying()
 
 
-wait_for_call()
-
+# wait_for_call()
+reproducir_cancion('Kill this love')
 
 
 
