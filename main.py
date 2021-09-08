@@ -7,6 +7,11 @@ import time
 import pywhatkit
 import os
 from decouple import config
+import re
+
+
+regexs = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
+regexw = r'\b(?:dile a)\s[áéíóúa-z0-9\s]+\s(?:que)\s[a-z0-9\s]'
 
 
 def querying():
@@ -18,9 +23,12 @@ def querying():
             continue
         q = q.lower()
         print(q)
-        if q == 'youtube':
-            voz('reproduciendo youtube.')
-            webbrowser.open('https://www.youtube.com')
+
+        if re.match(regexs, q):
+            index = q.find('en')
+            q = q[10:index]
+            voz(f'reproduciendo {q} en youtube.')
+            pywhatkit.playonyt(q)
             continue
 
         if 'busca' in q:
@@ -60,8 +68,8 @@ def wait_for_call():
             querying()
 
 
-# wait_for_call()
-reproducir_cancion('Kill this love')
+wait_for_call()
+#reproducir_cancion('Kill this love')
 
 
 
