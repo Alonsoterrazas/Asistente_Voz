@@ -1,6 +1,6 @@
 import pyttsx3
 import speech_recognition as sr
-import random
+
 
 engine = pyttsx3.init()
 rate = engine.getProperty('rate')
@@ -19,7 +19,6 @@ def voz(message):
 # Escucha tu micrófono y te regresa el audio en texto
 def listen_action():
     with sr.Microphone() as fuente:
-        print("estoy escuchando")
         audio = r.record(fuente, 4)
         try:
             q = r.recognize_google(audio, language="es")

@@ -1,21 +1,15 @@
 from bicho import listen_action, voz, call
 from Models.games import piedra_papel_tijeras
 from Controllers.SpotifyController import spotify_main
-from Models.Spotify.playback import *
-import webbrowser
-import time
 import pywhatkit
-import os
-from decouple import config
 import re
+import winsound
 
-
+nombre_archivo = 'Resources/Siu.wav'
 regexs = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
-regexw = r'\b(?:dile a)\s[áéíóúa-z0-9\s]+\s(?:que)\s[a-z0-9\s]'
 
 
 def querying():
-    saludos()
     start = True
     while start:
         q = listen_action()
@@ -51,13 +45,6 @@ def querying():
             break
 
 
-
-def saludos():
-    voz(''' Hola, Soy el bicho, SIUUU.
-     comó puedo ayudarte? 
-    ''')
-
-
 # función que espera a que digas la palabra magic
 def wait_for_call():
     while True:
@@ -65,11 +52,11 @@ def wait_for_call():
         v = v.lower() if v else None
         print(v)
         if v and 'okay bicho' in v:
+            winsound.PlaySound(nombre_archivo, winsound.SND_FILENAME | winsound.SND_NODEFAULT)
             querying()
 
-
 wait_for_call()
-#reproducir_cancion('Kill this love')
+
 
 
 

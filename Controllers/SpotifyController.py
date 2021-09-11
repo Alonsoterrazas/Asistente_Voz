@@ -1,7 +1,25 @@
 import re
-from Models.Spotify.playback import reanudar_playback, siguiente_cancion, pausar_playback, dispositivos,get_token, reproducir_cancion
+from Models.Spotify.playback import reanudar_playback, siguiente_cancion, pausar_playback, dispositivos, get_token, reproducir_cancion
 from bicho import voz
+'''
+reproduce {c} en spotify
+salta la cancion
+regresa la cancion
+pon modo aleatorio 
+pausa la cancion
+reanuda la cancion
+sube el volumen
+baja el volumen
+agrega {c} a la cola
+quita {c} de la cola
+reproduce spotify en el/la {d}
+reproduce la playlist {p} en spotify
+agrega {c} a la playlist {p}
+crea una playlist llamada {p}
+agrega esta cancion a la playlist {p}
+quita esa cancion de la playlist
 
+'''
 def spotify_main(q):
     # Reproducir una canción/playlist
     regex = r'\b(?:reproduce)\s[A-Za-z0-9\s]+\s(?:en)\s(?:spotify)'
@@ -30,3 +48,4 @@ def spotify_main(q):
     if 'token' in q:
         get_token()
         return
+
