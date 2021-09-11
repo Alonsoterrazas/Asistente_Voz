@@ -3,6 +3,7 @@ import requests
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.exceptions import SpotifyException
 from decouple import config
+import os
 
 CLIENT_ID = config('SPOTIPY_CLIENT_ID')
 CLIENT_SECRET = config('SPOTIPY_CLIENT_SECRET')
@@ -14,15 +15,15 @@ sa = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri
                   scope=scopes)
 sp = spotipy.Spotify(auth_manager=sa)
 '''
-Reanudar el playback
-añadir a la cola
-pausar el playback
-Pasar siguiente cancion
-regresar cancion
-reproducir una cancion
-cambiar de dispositivo
-activar/desactivar shuffle
-activar/desactivar repeat
+-Reanudar el playback
+-añadir a la cola
+-pausar el playback
+-Pasar siguiente cancion
+-regresar cancion
+*reproducir una cancion
+¿cambiar de dispositivo
+-activar/desactivar shuffle
+-activar/desactivar repeat
 '''
 
 
@@ -85,3 +86,35 @@ def dispositivos():
 
 def get_token():
     print(sa.get_access_token())
+
+def shuffle(device=None):
+    x = sp.current_playback()
+    x = x['shuffle_state']
+    if device:
+        sp.shuffle(state=not x, device_id=config(device))
+    else:
+        sp.shuffle(state=not x,)
+
+
+
+
+def aleatorio(device=None):
+    x = sp.current_playback()
+    if x:
+        x = x['repeat_state']
+
+    if device:
+        sp.repeat(state=not x, device_id=config(device))
+    else:
+        sp.repeat(state=not x,)
+
+
+#def cambiar_dispositivo():
+ #   x = sp.current_playback()['device']
+  #  sp.transfer_playback(device_id=, force_play=True )
+
+
+
+#x = sp.current_playback()
+#print(x)
+#aleatorio()
