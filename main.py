@@ -3,22 +3,21 @@ from Models.games import piedra_papel_tijeras
 from Controllers.SpotifyController import spotify_main
 import pywhatkit
 import re
-import winsound
+from Models.player import reproducir_arch
 
-nombre_archivo = 'Resources/Siu.wav'
-regexs = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
+regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
 
 
 def querying():
     start = True
     while start:
-        q = listen_action()
+        q = listen_action(4)
         if not q:
             continue
         q = q.lower()
         print(q)
 
-        if re.match(regexs, q):
+        if re.match(regexsyt, q):
             index = q.find('en')
             q = q[10:index]
             voz(f'reproduciendo {q} en youtube.')
@@ -52,8 +51,9 @@ def wait_for_call():
         v = v.lower() if v else None
         print(v)
         if v and 'okay bicho' in v:
-            winsound.PlaySound(nombre_archivo, winsound.SND_FILENAME | winsound.SND_NODEFAULT)
+            reproducir_arch('Siu')
             querying()
+
 
 wait_for_call()
 

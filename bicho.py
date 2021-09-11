@@ -17,9 +17,9 @@ def voz(message):
 
 
 # Escucha tu micrófono y te regresa el audio en texto
-def listen_action():
+def listen_action(duracion):
     with sr.Microphone() as fuente:
-        audio = r.record(fuente, 4)
+        audio = r.record(fuente, duracion)
         try:
             q = r.recognize_google(audio, language="es")
             return q
