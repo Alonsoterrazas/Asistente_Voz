@@ -51,6 +51,11 @@ def reproducir_cancion(cancion):
         return False
 
 
+def cancion_actual():
+    cp = sp.currently_playing()
+    return cp['item']['uri']
+
+
 def reanudar_playback():
     try:
         sp.start_playback()
@@ -89,6 +94,21 @@ def get_shuffle_state():
 
 def shuffle(state):
     sp.shuffle(state=state)
+
+
+def playlist_actual():
+    x = sp.current_playback()
+    x = x['context']
+    if not x:
+        return -1
+    if x['type'] != 'playlist':
+        return -1
+    playlists = sp.current_user_playlists()
+    playlists = playlists['items']
+    playlists = [pl for pl in playlists if pl['uri'] == x['uri']]
+    if len(playlists) == 0:
+        return -2
+    return playlists[0]['name']
 
 
 def repetir():
@@ -185,3 +205,6 @@ def borrar_cancion(cancion, playlist):
 def crear_playlist(nombre):
     user = sp.current_user()
     sp.user_playlist_create(user=user['id'], name=nombre)
+
+
+borrar_cancion('No estoy jaja', 'Imagina dragones')

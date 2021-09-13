@@ -30,7 +30,7 @@ def querying():
             pywhatkit.search(q)
             continue
 
-        if 'spotify' in q:
+        if spotify_command(q):
             spotify_main(q)
             continue
 
@@ -40,8 +40,13 @@ def querying():
             continue
 
         if q == 'adiós':
-            voz('tendre que dejar de luchar siuuuu')
+            voz('tendré que dejar de luchar siuuuu')
             break
+
+
+def spotify_command(q):
+    return 'spotify' or 'el volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
+           or 'pausa' or 'ponle play' or 'quita esa madre' in q
 
 
 # función que espera a que digas la palabra magic
