@@ -171,7 +171,7 @@ def agregar_cancion_pl(cancion, playlist):
 def borrar_cancion(cancion, playlist):
     playlists = sp.current_user_playlists()
     playlists = playlists['items']
-    playlists = [pl for pl in playlists if pl['name'].lower() == playlist]
+    playlists = [pl for pl in playlists if pl['name'] == playlist]
     if len(playlists) == 0:
         return -1
     pl_id = playlists[0]['id']
