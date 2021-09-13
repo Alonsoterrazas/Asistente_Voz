@@ -144,7 +144,7 @@ def cambiar_volumen(valor):
 def reproducir_playlist(playlist):
     playlists = sp.current_user_playlists()
     playlists = playlists['items']
-    playlists = [pl for pl in playlists if pl['name'] == playlist]
+    playlists = [pl for pl in playlists if pl['name'].lower() == playlist]
     if len(playlists) == 0:
         return -1
     sp.start_playback(context_uri=playlists[0]['uri'])
@@ -154,7 +154,7 @@ def reproducir_playlist(playlist):
 def agregar_cancion_pl(cancion, playlist):
     playlists = sp.current_user_playlists()
     playlists = playlists['items']
-    playlists = [pl for pl in playlists if pl['name'] == playlist]
+    playlists = [pl for pl in playlists if pl['name'].lower() == playlist]
     if len(playlists) == 0:
         return -1
     pl_id = playlists[0]['id']
@@ -171,7 +171,7 @@ def agregar_cancion_pl(cancion, playlist):
 def borrar_cancion(cancion, playlist):
     playlists = sp.current_user_playlists()
     playlists = playlists['items']
-    playlists = [pl for pl in playlists if pl['name'] == playlist]
+    playlists = [pl for pl in playlists if pl['name'].lower() == playlist]
     if len(playlists) == 0:
         return -1
     pl_id = playlists[0]['id']
@@ -181,7 +181,7 @@ def borrar_cancion(cancion, playlist):
     else:
         tracks = sp.playlist_items(playlist_id=pl_id)
         tracks = tracks['items']
-        track = [t for t in tracks if t['track']['name'] == cancion]
+        track = [t for t in tracks if t['track']['name'].lower() == cancion]
         if len(track) == 0:
             return -2
         track = track[0]['track']
