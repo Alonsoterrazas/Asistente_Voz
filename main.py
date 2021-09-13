@@ -11,7 +11,7 @@ regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
 def querying():
     start = True
     while start:
-        q = listen_action(4)
+        q = listen_action()
         if not q:
             continue
         q = q.lower()
@@ -45,7 +45,7 @@ def querying():
 
 
 def spotify_command(q):
-    return 'spotify' or 'el volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
+    return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
            or 'pausa' or 'ponle play' or 'quita esa madre' in q
 
 

@@ -15,6 +15,15 @@ reAggCPL2 = r'\b(?:agrega|mete|pon|añade)\s(?:esta canción)\s(?:a|en)\s(?:la p
 
 
 def spotify_main(q):
+    if re.match(reReproPl, q):
+        tokens = q.split(' ')
+        pl = ' '.join(tokens[3: len(tokens) - 2])
+        band = reproducir_playlist(pl)
+        if band == -1:
+            voz('No se encontró ninguna playlist con ese nombre en tu biblioteca')
+            return
+        voz(f'reproduciendo la playlist {pl} en spotify')
+        return
     # Reproducir una canción
     if re.match(reRepro, q):
         q = q[10:-11]
@@ -66,7 +75,7 @@ def spotify_main(q):
         cambiar_volumen(10)
         return
 
-    if q == 'baja el volumen' or q == 'bájale el volumen':
+    if q == 'baja el volumen' or q == 'bájale al volumen':
         voz('bajando el volumen')
         cambiar_volumen(-10)
         return
@@ -94,16 +103,6 @@ def spotify_main(q):
         disp = disp.upper()
         voz(f'cambiando dispositivo a {disp}')
         cambiar_dispositivo(disp)
-        return
-
-    if re.match(reReproPl, q):
-        tokens = q.split(' ')
-        pl = ' '.join(tokens[3: len(tokens) - 2])
-        band = reproducir_playlist(pl)
-        if band == -1:
-            voz('No se encontró ninguna playlist con ese nombre en tu biblioteca')
-            return
-        voz(f'reproduciendo la playlist {pl} en spotify')
         return
 
     if re.match(reAggCPl, q):

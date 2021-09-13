@@ -9,7 +9,7 @@ def piedra_papel_tijeras():
     voz('¿Que quieres jugar?')
 
     while True:
-        q = listen_action(2)
+        q = listen_action()
         if q:
             break
     q = q.lower()
