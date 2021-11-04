@@ -206,5 +206,3 @@ def crear_playlist(nombre):
     user = sp.current_user()
     sp.user_playlist_create(user=user['id'], name=nombre)
 
-
-borrar_cancion('No estoy jaja', 'Imagina dragones')

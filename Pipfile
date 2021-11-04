@@ -9,6 +9,7 @@ speechrecognition = "*"
 pywhatkit = "*"
 spotipy = "*"
 python-decouple = "*"
+requests = "*"
 
 [dev-packages]
 

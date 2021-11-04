@@ -1,9 +1,11 @@
+from requests.exceptions import ConnectTimeout
 from bicho import listen_action, voz, call
 from Models.games import piedra_papel_tijeras
 from Controllers.SpotifyController import spotify_main
 import pywhatkit
 import re
 from Models.player import reproducir_arch
+import requests
 
 regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
 
@@ -30,6 +32,15 @@ def querying():
             pywhatkit.search(q)
             continue
 
+        if 'perro' in q:
+            url = 'http://192.168.3.18/feedbuttonclick'
+            try:
+                requests.get(url, timeout=1)
+            except ConnectTimeout:
+                voz('El alimentador se encuentra fuera de conexion')
+                reproducir_arch('Siu')
+            continue
+
         if spotify_command(q):
             spotify_main(q)
             continue
@@ -41,6 +52,7 @@ def querying():
 
         if q == 'adiós':
             voz('tendré que dejar de luchar siuuuu')
+            # TODO meter audio de fue muy bonito estar en madrid
             break
 
 
@@ -60,16 +72,5 @@ def wait_for_call():
             querying()
 
 
-wait_for_call()
-
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    wait_for_call()
