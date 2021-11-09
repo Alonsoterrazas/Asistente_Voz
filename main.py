@@ -1,4 +1,4 @@
-from requests.exceptions import ConnectTimeout
+from requests.exceptions import ConnectTimeout, ReadTimeout
 from bicho import listen_action, voz, call
 from Models.games import piedra_papel_tijeras
 from Controllers.SpotifyController import spotify_main
@@ -32,12 +32,15 @@ def querying():
             pywhatkit.search(q)
             continue
 
-        if 'perro' in q:
+        if 'alimenta al perro' in q:
             url = 'http://192.168.3.18/feedbuttonclick'
             try:
-                requests.get(url, timeout=1)
+                requests.get(url, timeout=2)
             except ConnectTimeout:
                 voz('El alimentador se encuentra fuera de conexion')
+                reproducir_arch('Siu')
+            except ReadTimeout:
+                voz('se ha servido la comida')
                 reproducir_arch('Siu')
             continue
 
