@@ -7,13 +7,13 @@ import re
 from Models.player import reproducir_arch
 import requests
 
+
 class Main:
     def __init__(self):
         self.spotify_controller = Spotify_controller()
         self.games = Games()
         self.regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
         self.bicho = Bicho()
-
 
     def querying(self):
         start = True
@@ -63,11 +63,9 @@ class Main:
                 # TODO meter audio de fue muy bonito estar en madrid
                 break
 
-
     def spotify_command(self,q):
         return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
                or 'pausa' or 'ponle play' or 'quita esa madre' in q
-
 
     # función que espera a que digas la palabra magic
     def wait_for_call(self):

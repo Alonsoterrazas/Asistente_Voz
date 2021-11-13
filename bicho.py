@@ -1,6 +1,7 @@
 import pyttsx3
 import speech_recognition as sr
 
+
 class Bicho:
     def __init__(self):
         self.engine = pyttsx3.init()
@@ -10,12 +11,10 @@ class Bicho:
         self.engine.setProperty('voice', id)
         self.r = sr.Recognizer()
 
-
     # El asistente habla el mensaje
-    def voz(self,message):
+    def voz(self, message):
         self.engine.say(message)
         self.engine.runAndWait()
-
 
     # Escucha tu micrófono y te regresa el audio en texto
     def listen_action(self):
@@ -34,7 +33,6 @@ class Bicho:
             except:
                 return None
 
-
     def call(self):
         with sr.Microphone() as fuente:
             audio = self.r.record(fuente, 4)
@@ -44,6 +42,4 @@ class Bicho:
             except sr.UnknownValueError:
                 return None
             except sr.RequestError:
-                return None
-            except:
                 return None
