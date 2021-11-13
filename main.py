@@ -1,7 +1,7 @@
 from requests.exceptions import ConnectTimeout, ReadTimeout
 from bicho import Bicho
-from Models.games import piedra_papel_tijeras
-from Controllers.SpotifyController import spotify_main
+from Models.games import Games
+from Controllers.SpotifyController import Spotify_controller
 import pywhatkit
 import re
 from Models.player import reproducir_arch
@@ -9,6 +9,8 @@ import requests
 
 class Main:
     def __init__(self):
+        self.spotify_controller = Spotify_controller()
+        self.games = Games()
         self.regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
         self.bicho = Bicho()
 
@@ -48,12 +50,12 @@ class Main:
                 continue
 
             if self.spotify_command(q):
-                spotify_main(q)
+                self.spotify_controller.spotify_main(q)
                 continue
 
             if 'piedra papel o tijeras' in q:
                 self.bicho.voz('preparate para el duelo')
-                piedra_papel_tijeras()
+                self.games.piedra_papel_tijeras()
                 continue
 
             if q == 'adiós':
