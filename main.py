@@ -6,6 +6,7 @@ import pywhatkit
 import re
 from Models.player import reproducir_arch
 import requests
+from Views.Configuracion import VentanaConfiguracion
 
 
 class Main:
@@ -29,13 +30,19 @@ class Main:
                 q = q[10:index]
                 self.bicho.voz(f'reproduciendo {q} en youtube.')
                 pywhatkit.playonyt(q)
-                continue
+                break
 
             if 'busca' in q:
                 q = q[6:]
                 self.bicho.voz(f'Buscando {q}, espera un momento ')
                 pywhatkit.search(q)
-                continue
+                break
+
+            if 'abre la configuración' in q:
+                self.bicho.voz(f'abriendo la ventana de configuración')
+                vc = VentanaConfiguracion()
+                vc.mostrarVista()
+                break
 
             if 'alimenta al perro' in q:
                 url = 'http://192.168.3.18/feedbuttonclick'
@@ -47,24 +54,24 @@ class Main:
                 except ReadTimeout:
                     self.bicho.voz('se ha servido la comida')
                     reproducir_arch('Siu')
-                continue
+                break
 
             if self.spotify_command(q):
                 self.spotify_controller.spotify_main(q)
-                continue
+                break
 
             if 'piedra papel o tijeras' in q:
                 self.bicho.voz('preparate para el duelo')
                 self.games.piedra_papel_tijeras()
-                continue
+                break
 
             if q == 'adiós':
                 self.bicho.voz('tendré que dejar de luchar siuuuu')
                 # TODO meter audio de fue muy bonito estar en madrid
                 break
 
-    def spotify_command(self,q):
-        return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
+    def spotify_command(self, q):
+        return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola' \
                or 'pausa' or 'ponle play' or 'quita esa madre' in q
 
     # función que espera a que digas la palabra magic
