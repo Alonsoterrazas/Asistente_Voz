@@ -80,11 +80,20 @@ class Main:
             v = self.bicho.call()
             v = v.lower() if v else None
             print(v)
-            if v and 'okay bicho' in v:
+            with open('data.txt', 'r') as file:
+                filedata = file.read()
+                indexcmdact = filedata.index('COMANDO_ACTIVACION')
+                indexcmdviejo1 = filedata.index("'", indexcmdact) + 1
+                indexcmdviejo2 = filedata.index("'", indexcmdviejo1)
+                comact = filedata[indexcmdviejo1:indexcmdviejo2]
+            if v and comact in v:
                 reproducir_arch('Siu')
                 self.querying()
 
 
 if __name__ == '__main__':
     main = Main()
-    main.wait_for_call()
+    # main.wait_for_call()
+
+    vc = VentanaConfiguracion()
+    vc.mostrarVista()
