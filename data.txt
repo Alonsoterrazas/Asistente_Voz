@@ -1,2 +1,2 @@
 COMANDO_ACTIVACION = 'bicho'
-POSTMAN = 'C:\Users\bla\bla\bla\Postman.exe'
+lolsito = 'C:\Riot Games\League of Legends\LeagueClient.exe'

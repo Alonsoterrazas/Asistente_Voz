@@ -1,3 +1,5 @@
+import os
+
 from requests.exceptions import ConnectTimeout, ReadTimeout
 from bicho import Bicho
 from Models.games import Games
@@ -15,6 +17,7 @@ class Main:
         self.games = Games()
         self.regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
         self.bicho = Bicho()
+        self.regexsruta = r'\b(?:abre)\s[a-z0-9\s]'
 
     def querying(self):
         start = True
@@ -43,6 +46,22 @@ class Main:
                 vc = VentanaConfiguracion()
                 vc.mostrarVista()
                 break
+
+            if re.match(self.regexsruta, q):
+                index = q.find('e')
+                nombre = q[index + 2:]
+                self.bicho.voz(f'abriendo {nombre}')
+
+                with open('data.txt', 'r') as file:
+                    filedata = file.read()
+                    indexnombre = filedata.index(nombre)
+                    indexruta1 = filedata.index("'", indexnombre) + 1
+                    indexruta2 = filedata.index("'", indexruta1)
+                    ruta = filedata[indexruta1:indexruta2]
+                os.system(f'"{ruta}"')
+                break
+
+
 
             if 'alimenta al perro' in q:
                 url = 'http://192.168.3.18/feedbuttonclick'
@@ -93,7 +112,6 @@ class Main:
 
 if __name__ == '__main__':
     main = Main()
-    # main.wait_for_call()
+    main.wait_for_call()
 
-    vc = VentanaConfiguracion()
-    vc.mostrarVista()
+
