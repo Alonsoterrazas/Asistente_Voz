@@ -155,6 +155,7 @@ class Spotify_controller:
             if band == -2:
                 self.bicho.voz('No se encontró esta canción dentro de la playlist')
                 return
+            self.spotify.siguiente_cancion()
             self.bicho.voz(f'Se ha eliminado a la playlist {pl}')
             return
 
