@@ -14,7 +14,8 @@ def querying():
     start = True
     while start:
         # q = listen_action()
-        q = 'reproduce enemy en spotify'
+        # q = 'pon modo aleatorio'
+        q = 'quita esta canción de la playlist'
         if not q:
             continue
         q = q.lower()

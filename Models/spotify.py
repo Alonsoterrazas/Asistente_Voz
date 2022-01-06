@@ -19,16 +19,17 @@ sp = spotipy.Spotify(auth_manager=sa)
 states = ['context', 'track', 'off']
 regexsuri = r'\b(?:spotify:track:)[A-Za-z0-9]+'
 
+
 # Empieza a reproducir una cancion sin perder la cola
 # Regresa
 # 1 en caso de exito
 # 0 si la cancion se encuentra reproduciendose
-# -1 si no hay dispositivos activos
 # -2 si algun error interno ocurre
-def reproducir_cancion(cancion):
+def reproducirCancion(cancion):
     try:
         track = sp.search(q=f'track:{cancion}', type='track')
         time.sleep(.2)
+        # TODO Mejorar algoritomo para encontrar canciones
         track = track['tracks']['items'][0]['uri']
 
         cp = sp.currently_playing()
@@ -38,21 +39,7 @@ def reproducir_cancion(cancion):
             if track == cp:
                 return 0
 
-        sp.add_to_queue(track)
-        cola = []
-        volume = sp.current_playback()['device']['volume_percent']
-        sp.volume(0)
-        while cp != track:
-            sp.next_track()
-            time.sleep(.1)
-            cp = sp.currently_playing()
-            cp = cp['item']['uri']
-            cola.append(cp)
-
-        cola.pop(len(cola) - 1)
-        sp.volume(volume)
-        for track in cola:
-            sp.add_to_queue(track)
+        sp.start_playback(uris=[cp])
         return 1
     except SpotifyException:
         return -2
@@ -138,6 +125,7 @@ def repetir():
         sp.repeat(state=states[index])
 
 
+# TODO Hacer que encuentre el dispositivo en base al tipo
 def cambiar_dispositivo(device):
     sp.transfer_playback(device_id=config(device), force_play=True)
 
@@ -159,6 +147,10 @@ def cambiar_volumen(valor):
     sp.volume(volume)
 
 
+# Reproduce una playlist
+# Regresa
+# -1 si no encuentra la playlist
+# 1 en caso de exito
 def reproducir_playlist(playlist):
     playlists = sp.current_user_playlists()
     playlists = playlists['items']
@@ -180,6 +172,7 @@ def agregar_cancion_pl(cancion, playlist):
     track = cancion
     if not re.match(regexsuri, cancion):
         track = sp.search(q=f'track:{cancion}', type='track')
+        # TODO Mismo pedo que al reproducir cancion, juntar en un metodo
         track = track['tracks']['items'][0]['uri']
 
     sp.playlist_add_items(playlist_id=pl_id, items=[track])
@@ -216,11 +209,9 @@ def borrar_cancion(cancion, playlist):
     headers = {"Accept": "application/json", "Authorization": f"Bearer {token}"}
     request = requests.delete(f'https://api.spotify.com/v1/playlists/{pl_id}/tracks', headers=headers, json=body)
     response = request.json()
-    print(response)
     return 1
 
 
 def crear_playlist(nombre):
     user = sp.current_user()
     sp.user_playlist_create(user=user['id'], name=nombre)
-
