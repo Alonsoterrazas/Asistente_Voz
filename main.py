@@ -89,6 +89,3 @@ def wait_for_call():
 
 if __name__ == '__main__':
     wait_for_call()
-
-    vc = VentanaConfiguracion()
-    vc.mostrarVista()
