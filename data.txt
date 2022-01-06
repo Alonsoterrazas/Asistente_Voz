@@ -1,2 +1,0 @@
-COMANDO_ACTIVACION = 'bicho'
-POSTMAN = 'C:\Users\bla\bla\bla\Postman.exe'

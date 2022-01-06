@@ -6,7 +6,6 @@ import pywhatkit
 import re
 from Models.player import reproducir_arch
 import requests
-from Views.Configuracion import VentanaConfiguracion
 
 regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
 
