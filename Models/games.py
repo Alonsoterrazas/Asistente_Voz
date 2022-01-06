@@ -45,3 +45,4 @@ class Games:
             return
         self.bicho.voz('Dejate de mamadas y di algo bien')
 
+    piedra_papel_tijeras()
