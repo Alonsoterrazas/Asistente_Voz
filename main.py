@@ -10,7 +10,6 @@ from Models.player import reproducir_arch
 import requests
 from Views.Configuracion import VentanaConfiguracion
 
-
 class Main:
     def __init__(self):
         self.spotify_controller = Spotify_controller()
@@ -18,6 +17,7 @@ class Main:
         self.regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
         self.bicho = Bicho()
         self.regexsruta = r'\b(?:abre)\s[a-z0-9\s]'
+
 
     def querying(self):
         start = True
@@ -92,6 +92,7 @@ class Main:
     def spotify_command(self, q):
         return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola' \
                or 'pausa' or 'ponle play' or 'quita esa madre' in q
+
 
     # función que espera a que digas la palabra magic
     def wait_for_call(self):

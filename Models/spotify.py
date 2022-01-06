@@ -27,6 +27,7 @@ class Spotify:
             track = self.sp.search(q=f'track:{cancion}', type='track')
             time.sleep(.2)
             track = track['tracks']['items'][0]['uri']
+
             cp = self.sp.currently_playing()
             cp = cp['item']['uri']
             if track == cp:
