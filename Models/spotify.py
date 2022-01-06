@@ -19,7 +19,12 @@ sp = spotipy.Spotify(auth_manager=sa)
 states = ['context', 'track', 'off']
 regexsuri = r'\b(?:spotify:track:)[A-Za-z0-9]+'
 
-
+# Empieza a reproducir una cancion sin perder la cola
+# Regresa
+# 1 en caso de exito
+# 0 si la cancion se encuentra reproduciendose
+# -1 si no hay dispositivos activos
+# -2 si algun error interno ocurre
 def reproducir_cancion(cancion):
     try:
         track = sp.search(q=f'track:{cancion}', type='track')
@@ -27,9 +32,11 @@ def reproducir_cancion(cancion):
         track = track['tracks']['items'][0]['uri']
 
         cp = sp.currently_playing()
-        cp = cp['item']['uri']
-        if track == cp:
-            return
+        # Existe cancion reproduciendose
+        if cp:
+            cp = cp['item']['uri']
+            if track == cp:
+                return 0
 
         sp.add_to_queue(track)
         cola = []
@@ -46,9 +53,9 @@ def reproducir_cancion(cancion):
         sp.volume(volume)
         for track in cola:
             sp.add_to_queue(track)
-        return True
+        return 1
     except SpotifyException:
-        return False
+        return -2
 
 
 def cancion_actual():
@@ -81,6 +88,17 @@ def dispositivos():
     dis = dis['devices']
     for i in dis:
         print(i)
+
+
+def validaDispositivos():
+    devices = sp.devices()
+    devices = devices['devices']
+    if len(devices) == 0:
+        return False
+    activeDevices = [d for d in devices if d['is_active']]
+    if len(activeDevices) == 0:
+        return False
+    return True
 
 
 def get_token():

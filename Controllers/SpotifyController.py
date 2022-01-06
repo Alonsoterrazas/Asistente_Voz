@@ -1,7 +1,5 @@
 import re
-from Models.spotify import siguiente_cancion, pausar_playback, dispositivos, get_token, reproducir_cancion, \
-    regresar_cancion, shuffle, get_shuffle_state, reproducir_playlist, agregar_cancion_pl, crear_playlist, reanudar_playback, \
-    agregar_en_cola, cambiar_dispositivo, cambiar_volumen, borrar_cancion, cancion_actual, playlist_actual
+from Models.spotify import *
 from bicho import voz
 
 reRepro = r'\b(?:reproduce)\s[A-Za-z0-9\s]+\s(?:en spotify)'
@@ -15,6 +13,7 @@ reAggCPL2 = r'\b(?:agrega|mete|pon|añade)\s(?:esta canción)\s(?:a|en)\s(?:la p
 
 
 def spotify_main(q):
+    # Reproducir una playlist
     if re.match(reReproPl, q):
         tokens = q.split(' ')
         pl = ' '.join(tokens[3: len(tokens) - 2])
@@ -24,11 +23,19 @@ def spotify_main(q):
             return
         voz(f'reproduciendo la playlist {pl} en spotify')
         return
+
     # Reproducir una canción
     if re.match(reRepro, q):
+        if not validaDispositivos():
+            voz('No tienes ningun dispositivo activo')
+            return
+        
         q = q[10:-11]
         voz(f'reproduciendo {q} en spotify, espere un momento')
-        if not reproducir_cancion(q):
+        returnValue = reproducir_cancion(q)
+        if returnValue == 0 or returnValue == 1:
+            return
+        if returnValue == -2:
             voz('Ocurrió un error al reanudar la canción')
         return
 
@@ -156,7 +163,7 @@ def spotify_main(q):
         return
 
     if 'equipos' in q:
-        dispositivos()
+        print(validaDispositivos())
         return
 
     if 'token' in q:
