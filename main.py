@@ -1,5 +1,3 @@
-import os
-
 from requests.exceptions import ConnectTimeout, ReadTimeout
 from bicho import listen_action, voz, call
 from Models.games import piedra_papel_tijeras
@@ -47,6 +45,17 @@ def querying():
                 reproducir_arch('Siu')
             continue
 
+            if 'alimenta al perro' in q:
+                url = 'http://192.168.3.18/feedbuttonclick'
+                try:
+                    requests.get(url, timeout=2)
+                except ConnectTimeout:
+                    self.bicho.voz('El alimentador se encuentra fuera de conexion')
+                    reproducir_arch('Siu')
+                except ReadTimeout:
+                    self.bicho.voz('se ha servido la comida')
+                    reproducir_arch('Siu')
+                break
         if spotify_command(q):
             spotify_main(q)
             continue
@@ -81,4 +90,5 @@ def wait_for_call():
 if __name__ == '__main__':
     wait_for_call()
 
-
+    vc = VentanaConfiguracion()
+    vc.mostrarVista()
