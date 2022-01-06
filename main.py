@@ -13,7 +13,8 @@ regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
 def querying():
     start = True
     while start:
-        q = listen_action()
+        # q = listen_action()
+        q = 'reproduce enemy en spotify'
         if not q:
             continue
         q = q.lower()
@@ -24,13 +25,13 @@ def querying():
             q = q[10:index]
             voz(f'reproduciendo {q} en youtube.')
             pywhatkit.playonyt(q)
-            continue
+            break
 
         if 'busca' in q:
             q = q[6:]
             voz(f'Buscando {q}, espera un momento ')
             pywhatkit.search(q)
-            continue
+            break
 
         if 'alimenta al perro' in q:
             url = 'http://192.168.3.18/feedbuttonclick'
@@ -42,27 +43,16 @@ def querying():
             except ReadTimeout:
                 voz('se ha servido la comida')
                 reproducir_arch('Siu')
-            continue
+            break
 
-            if 'alimenta al perro' in q:
-                url = 'http://192.168.3.18/feedbuttonclick'
-                try:
-                    requests.get(url, timeout=2)
-                except ConnectTimeout:
-                    self.bicho.voz('El alimentador se encuentra fuera de conexion')
-                    reproducir_arch('Siu')
-                except ReadTimeout:
-                    self.bicho.voz('se ha servido la comida')
-                    reproducir_arch('Siu')
-                break
         if spotify_command(q):
             spotify_main(q)
-            continue
+            break
 
         if 'piedra papel o tijeras' in q:
             voz('preparate para el duelo')
             piedra_papel_tijeras()
-            continue
+            break
 
         if q == 'adiós':
             voz('tendré que dejar de luchar siuuuu')
@@ -87,4 +77,6 @@ def wait_for_call():
 
 
 if __name__ == '__main__':
-    wait_for_call()
+    # wait_for_call()
+    querying()
+
