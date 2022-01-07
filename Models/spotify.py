@@ -5,13 +5,14 @@ from decouple import config
 import time
 import re
 import requests
+from Models.storeData import getObjectFromPickle, saveObjectOnPickle
 
 CLIENT_ID = config('SPOTIPY_CLIENT_ID')
 CLIENT_SECRET = config('SPOTIPY_CLIENT_SECRET')
 REDIRECT_URL = config('SPOTIPY_REDIRECT_URI')
 
 scopes = 'user-read-playback-state,user-modify-playback-state,user-read-currently-playing,playlist-modify-private,' \
-         'playlist-read-private,playlist-modify-public'
+         'playlist-read-private,playlist-modify-public,user-library-modify,user-library-read,user-top-read'
 
 sa = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL,
                   scope=scopes)
@@ -27,10 +28,7 @@ regexsuri = r'\b(?:spotify:track:)[A-Za-z0-9]+'
 # -2 si algun error interno ocurre
 def reproducirCancion(cancion):
     try:
-        track = sp.search(q=f'track:{cancion}', type='track')
-        time.sleep(.2)
-        # TODO Mejorar algoritomo para encontrar canciones
-        track = track['tracks']['items'][0]['uri']
+        track = obtenerURICancion(cancion)
 
         cp = sp.currently_playing()
         # Existe cancion reproduciendose
@@ -131,9 +129,7 @@ def cambiar_dispositivo(device):
 
 
 def agregar_en_cola(cancion):
-    track = sp.search(q=f'track:{cancion}', type='track')
-    time.sleep(.2)
-    track = track['tracks']['items'][0]['uri']
+    track = obtenerURICancion(cancion)
     sp.add_to_queue(track)
 
 
@@ -171,9 +167,7 @@ def agregar_cancion_pl(cancion, playlist):
 
     track = cancion
     if not re.match(regexsuri, cancion):
-        track = sp.search(q=f'track:{cancion}', type='track')
-        # TODO Mismo pedo que al reproducir cancion, juntar en un metodo
-        track = track['tracks']['items'][0]['uri']
+        track = obtenerURICancion(cancion)
 
     sp.playlist_add_items(playlist_id=pl_id, items=[track])
     return 1
@@ -215,3 +209,70 @@ def borrar_cancion(cancion, playlist):
 def crear_playlist(nombre):
     user = sp.current_user()
     sp.user_playlist_create(user=user['id'], name=nombre)
+
+
+def obtenerURICancion(nombre):
+    # Buscar en canciones guardadas
+    cancionesGuardadas = getObjectFromPickle('savedTracks')
+    cancionesEncontradas = \
+        [track['track'] for track in cancionesGuardadas if track['track']['name'].lower() == nombre.lower()]
+    if len(cancionesEncontradas) == 0:
+        cancionesBusqueda = sp.search(q=f'track:{nombre}', type='track')
+        cancionesBusqueda = cancionesBusqueda['tracks']['items']
+        # Buscar por artista
+        artistasGuardados = getObjectFromPickle('savedArtistas')
+        artistasUris = [artista['uri'] for artista in artistasGuardados]
+        cancionesEncontradas = \
+            [track for track in cancionesBusqueda if track['artists'][0]['uri'] in artistasUris]
+        if len(cancionesEncontradas) > 0:
+            return cancionesEncontradas[0]['uri']
+
+        # La mas popular que encuentre
+        return cancionesBusqueda[0]['uri']
+
+    if len(cancionesEncontradas) > 1:
+        cancionesEncontradas = sorted(cancionesEncontradas, key=lambda i: i['popularity'])
+
+    return cancionesEncontradas[0]['uri']
+
+
+def guardarCanciones():
+    cont = 0
+    cantCanciones = 1
+    savedTracks = []
+    while cantCanciones != 0:
+        canciones = sp.current_user_saved_tracks(limit=50, offset=(cont * 50))
+        canciones = canciones['items']
+        savedTracks.extend(canciones)
+        cantCanciones = len(canciones)
+        cont += 1
+
+    saveObjectOnPickle(savedTracks, 'savedTracks')
+
+
+def guardarAlbumes():
+    cont = 0
+    cantAlbumes = 1
+    savedAlbumes = []
+    while cantAlbumes != 0:
+        albumes = sp.current_user_saved_albums(limit=50, offset=(cont * 50))
+        albumes = albumes['items']
+        savedAlbumes.extend(albumes)
+        cantAlbumes = len(albumes)
+        cont += 1
+
+    saveObjectOnPickle(savedAlbumes, 'savedAlbumes')
+
+
+def guardarArtistas():
+    cont = 0
+    cantArtistas = 1
+    savedArtistas = []
+    while cantArtistas != 0:
+        artistas = sp.current_user_top_artists(offset=(cont * 20), time_range='long_term')
+        artistas = artistas['items']
+        savedArtistas.extend(artistas)
+        cantArtistas = len(artistas)
+        cont += 1
+
+    saveObjectOnPickle(savedArtistas, 'savedArtistas')

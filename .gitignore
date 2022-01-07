@@ -119,3 +119,5 @@ GitHub.sublime-settings
 
 # Pickles
 savedTracks.pkl
+savedAlbumes.pkl
+savedArtistas.pkl

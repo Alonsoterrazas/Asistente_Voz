@@ -1,4 +1,3 @@
-import re
 from Models.spotify import *
 from bicho import voz
 
