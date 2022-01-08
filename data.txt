@@ -1,2 +1,0 @@
-COMANDO_ACTIVACION = 'bicho'
-lolsito = 'C:\Riot Games\League of Legends\LeagueClient.exe'
