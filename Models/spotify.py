@@ -71,8 +71,7 @@ def pausar_playback():
 def dispositivos():
     dis = sp.devices()
     dis = dis['devices']
-    for i in dis:
-        print(i)
+    return dis
 
 
 def validaDispositivos():
@@ -123,10 +122,38 @@ def repetir():
         sp.repeat(state=states[index])
 
 
-# TODO Hacer que encuentre el dispositivo en base al tipo
+# Smartphone Computer CastAudio
+# Cambia el dispositivo donde se reproduce el spotify
+# Regresa
+# 0 en caso de exito
+# -1 si no se menciono ningun apodo valido
+# -2 si no encontro ningun dispositivo activo
 def cambiar_dispositivo(device):
-    sp.transfer_playback(device_id=config(device), force_play=True)
+    nicknamesPhone = ['teléfono', 'cel', 'celular']
+    nicknamesPC = ['pc', 'computadora', 'laptop', 'compu']
+    nicknamesBocinas = ['bocina']
 
+    userDevices = dispositivos()
+    devicesEncontrados = [d for d in userDevices if d['name'] == device]
+    if len(devicesEncontrados) > 0:
+        sp.transfer_playback(device_id=devicesEncontrados[0]['id'], force_play=True)
+        return 0
+
+    typeToFound = ''
+    if device in nicknamesPhone:
+        typeToFound = 'Smartphone'
+    if device in nicknamesPC:
+        typeToFound = 'Computer'
+    if device in nicknamesBocinas:
+        typeToFound = 'CastAudio'
+    if typeToFound == '':
+        return -1
+
+    devicesEncontrados = [d for d in userDevices if d['type'] == typeToFound]
+    if len(devicesEncontrados) == 0:
+        return -2
+    sp.transfer_playback(device_id=devicesEncontrados[0]['id'], force_play=True)
+    return 0
 
 def agregar_en_cola(cancion):
     track = obtenerURICancion(cancion)
@@ -276,3 +303,6 @@ def guardarArtistas():
         cont += 1
 
     saveObjectOnPickle(savedArtistas, 'savedArtistas')
+
+
+dispositivos()

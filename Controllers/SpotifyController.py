@@ -104,21 +104,40 @@ def spotify_main(q):
 
     # Cambia de dispositivo
     if re.match(reCambdisp, q):
+        if not validaDispositivos():
+            voz('No tienes ningun dispositivo activo')
+            return
         disp = q[24:]
-        disp = disp.upper()
+        disp = disp.lower()
         voz(f'cambiando dispositivo a {disp}')
-        cambiar_dispositivo(disp)
+        regreso = cambiar_dispositivo(disp)
+        if regreso == -1:
+            voz('No mencionaste ningún apodo válido')
+            return
+        if regreso == -2:
+            voz('No encontré ningún dispositivo')
+            return
         return
+
     if re.match(reCambdisp2, q):
+        if not validaDispositivos():
+            voz('No tienes ningun dispositivo activo')
+            return
         tokens = q.split(' ')
         if tokens[3] == 'al':
             index = 4
         else:
             index = 5
         disp = ' '.join(tokens[index: len(tokens)])
-        disp = disp.upper()
+        disp = disp.lower()
         voz(f'cambiando dispositivo a {disp}')
-        cambiar_dispositivo(disp)
+        regreso = cambiar_dispositivo(disp)
+        if regreso == -1:
+            voz('No mencionaste ningún apodo válido')
+            return
+        if regreso == -2:
+            voz('No encontré ningún dispositivo')
+            return
         return
 
     # Agrega cancion a la playlist
