@@ -28,15 +28,15 @@ def listen_action():
             Podrías repetirlo''')
             return None
         except sr.RequestError:
-            voz("Ocurrió un error. verifique su connexion a internet Siuuuu")
+            voz("Ocurrió un error. verifique su connexion a internet")
             return None
         except:
             return None
 
 
-def call():
+def call(duracion):
     with sr.Microphone() as fuente:
-        audio = r.record(fuente, 4)
+        audio = r.record(fuente, duracion)
         try:
             q = r.recognize_google(audio, language="es")
             return q

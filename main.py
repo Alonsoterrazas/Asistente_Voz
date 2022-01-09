@@ -43,23 +43,22 @@ def querying():
             pywhatkit.search(q)
             break
 
-        if 'alimenta al perro' in q:
-            url = 'http://192.168.3.18/feedbuttonclick'
-            try:
-                requests.get(url, timeout=2)
-            except ConnectTimeout:
-                voz('El alimentador se encuentra fuera de conexion')
-                reproducir_arch('Siu')
-            except ReadTimeout:
-                voz('se ha servido la comida')
-                reproducir_arch('Siu')
-            break
+        # if 'alimenta al perro' in q:
+        #     url = 'http://192.168.3.18/feedbuttonclick'
+        #     try:
+        #         requests.get(url, timeout=2)
+        #     except ConnectTimeout:
+        #         voz('El alimentador se encuentra fuera de conexion')
+        #     except ReadTimeout:
+        #         voz('se ha servido la comida')
+        #         reproducir_arch('Siu')
+        #     break
 
         if spotify_command(q):
             spotify_main(q)
             break
 
-        if 'piedra papel o tijeras' in q:
+        if 'piedra papel o tijera' in q:
             voz('preparate para el duelo')
             piedra_papel_tijeras()
             break
@@ -71,14 +70,29 @@ def querying():
 
 
 def spotify_command(q):
-    return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
-           or 'pausa' or 'ponle play' or 'quita esa madre' in q
+    if 'spotify' in q:
+        return True
+    if 'volumen' in q:
+        return True
+    if 'modo aleatorio' in q:
+        return True
+    if 'playlist' in q:
+        return True
+    if 'la cola' in q:
+        return True
+    if 'pausa' in q:
+        return True
+    if 'ponle play' in q:
+        return True
+    if 'quita esa madre' in q:
+        return True
+    return False
 
 
 # función que espera a que digas la palabra magic
 def wait_for_call():
     while True:
-        v = call()
+        v = call(4)
         v = v.lower() if v else None
         print(v)
         if v and 'okay bicho' in v:
