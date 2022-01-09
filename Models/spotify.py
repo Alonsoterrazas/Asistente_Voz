@@ -155,6 +155,7 @@ def cambiar_dispositivo(device):
     sp.transfer_playback(device_id=devicesEncontrados[0]['id'], force_play=True)
     return 0
 
+
 def agregar_en_cola(cancion):
     track = obtenerURICancion(cancion)
     sp.add_to_queue(track)

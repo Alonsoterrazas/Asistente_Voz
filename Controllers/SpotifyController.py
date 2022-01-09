@@ -105,7 +105,7 @@ def spotify_main(q):
     # Cambia de dispositivo
     if re.match(reCambdisp, q):
         if not validaDispositivos():
-            voz('No tienes ningun dispositivo activo')
+            voz('No tienes ningún dispositivo activo')
             return
         disp = q[24:]
         disp = disp.lower()
@@ -121,7 +121,7 @@ def spotify_main(q):
 
     if re.match(reCambdisp2, q):
         if not validaDispositivos():
-            voz('No tienes ningun dispositivo activo')
+            voz('No tienes ningún dispositivo activo')
             return
         tokens = q.split(' ')
         if tokens[3] == 'al':

@@ -5,8 +5,8 @@ import speech_recognition as sr
 engine = pyttsx3.init()
 rate = engine.getProperty('rate')
 engine.setProperty('rate', rate - 40)
-id = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_PT-BR_DANIEL_11.0'
-engine.setProperty('voice', id)
+idRegistroVoz = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_PT-BR_DANIEL_11.0'
+engine.setProperty('voice', idRegistroVoz)
 r = sr.Recognizer()
 
 
