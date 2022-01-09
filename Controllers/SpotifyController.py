@@ -204,3 +204,10 @@ def spotify_main(q):
     if 'token' in q:
         get_token()
         return
+
+
+def buscaLetra():
+    if validaDispositivos():
+        name = getNameSongPlaying()
+        return name
+    return False

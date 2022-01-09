@@ -121,3 +121,7 @@ GitHub.sublime-settings
 savedTracks.pkl
 savedAlbumes.pkl
 savedArtistas.pkl
+
+# Pyinstaller
+build/
+main.spec

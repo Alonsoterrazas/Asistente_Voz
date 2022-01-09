@@ -1,7 +1,7 @@
 from requests.exceptions import ConnectTimeout, ReadTimeout
 from bicho import listen_action, voz, call
 from Models.games import piedra_papel_tijeras
-from Controllers.SpotifyController import spotify_main
+from Controllers.SpotifyController import spotify_main, buscaLetra
 import pywhatkit
 import re
 from Models.player import reproducir_arch
@@ -13,9 +13,8 @@ regexsyt = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
 def querying():
     start = True
     while start:
-        # q = listen_action()
-        # q = 'pon modo aleatorio'
-        q = 'pasa el spotify a la bocina'
+        q = listen_action()
+        # q = 'baja el volumen'
         if not q:
             continue
         q = q.lower()
@@ -29,8 +28,18 @@ def querying():
             break
 
         if 'busca' in q:
+            # Buscar la letra de la cancion que suena
+            if q == 'busca la letra de esa canción':
+                nombre = buscaLetra()
+                if nombre:
+                    voz(f'Buscando la letra de {nombre}')
+                    pywhatkit.search(f'{nombre} lyrics')
+                    return
+                voz('No detecto ninguna canción en spotify sonando')
+                return
+
             q = q[6:]
-            voz(f'Buscando {q}, espera un momento ')
+            voz(f'Buscando {q}, espera un momento')
             pywhatkit.search(q)
             break
 
@@ -78,6 +87,5 @@ def wait_for_call():
 
 
 if __name__ == '__main__':
-    # wait_for_call()
-    querying()
-
+    wait_for_call()
+    # querying()

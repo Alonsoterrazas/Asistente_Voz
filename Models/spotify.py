@@ -37,7 +37,7 @@ def reproducirCancion(cancion):
             if track == cp:
                 return 0
 
-        sp.start_playback(uris=[cp])
+        sp.start_playback(uris=[track])
         return 1
     except SpotifyException:
         return -2
@@ -242,6 +242,13 @@ def crear_playlist(nombre):
 def obtenerURICancion(nombre):
     # Buscar en canciones guardadas
     cancionesGuardadas = getObjectFromPickle('savedTracks')
+    if not cancionesGuardadas:
+        if guardarCanciones():
+            cancionesGuardadas = getObjectFromPickle('savedTracks')
+        else:
+            # Si falla el metodo guardar canciones no se toma en cuenta
+            cancionesGuardadas = []
+
     cancionesEncontradas = \
         [track['track'] for track in cancionesGuardadas if track['track']['name'].lower() == nombre.lower()]
     if len(cancionesEncontradas) == 0:
@@ -249,6 +256,13 @@ def obtenerURICancion(nombre):
         cancionesBusqueda = cancionesBusqueda['tracks']['items']
         # Buscar por artista
         artistasGuardados = getObjectFromPickle('savedArtistas')
+        if not artistasGuardados:
+            if guardarArtistas():
+                artistasGuardados = getObjectFromPickle('savedArtistas')
+            else:
+                # Mismo caso que las canciones
+                artistasGuardados = []
+
         artistasUris = [artista['uri'] for artista in artistasGuardados]
         cancionesEncontradas = \
             [track for track in cancionesBusqueda if track['artists'][0]['uri'] in artistasUris]
@@ -275,21 +289,7 @@ def guardarCanciones():
         cantCanciones = len(canciones)
         cont += 1
 
-    saveObjectOnPickle(savedTracks, 'savedTracks')
-
-
-def guardarAlbumes():
-    cont = 0
-    cantAlbumes = 1
-    savedAlbumes = []
-    while cantAlbumes != 0:
-        albumes = sp.current_user_saved_albums(limit=50, offset=(cont * 50))
-        albumes = albumes['items']
-        savedAlbumes.extend(albumes)
-        cantAlbumes = len(albumes)
-        cont += 1
-
-    saveObjectOnPickle(savedAlbumes, 'savedAlbumes')
+    return saveObjectOnPickle(savedTracks, 'savedTracks')
 
 
 def guardarArtistas():
@@ -306,4 +306,7 @@ def guardarArtistas():
     saveObjectOnPickle(savedArtistas, 'savedArtistas')
 
 
-dispositivos()
+def getNameSongPlaying():
+    current = sp.currently_playing()
+    name = current['item']['name']
+    return name
