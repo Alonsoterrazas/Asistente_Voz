@@ -40,13 +40,14 @@ lib/
 lib64/
 parts/
 sdist/
+build/
 var/
 wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 *.manifest
-.spec
+*.spec
 
 # Installer logs
 pip-log.txt
@@ -121,7 +122,3 @@ GitHub.sublime-settings
 savedTracks.pkl
 savedAlbumes.pkl
 savedArtistas.pkl
-
-# Pyinstaller
-build/
-main.spec
