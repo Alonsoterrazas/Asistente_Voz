@@ -54,18 +54,13 @@ def querying():
         #         reproducir_arch('Siu')
         #     break
 
-        if spotify_command(q):
-            spotify_main(q)
-            break
-
         if 'piedra papel o tijera' in q:
             voz('preparate para el duelo')
             piedra_papel_tijeras()
             break
 
-        if q == 'adiós':
-            voz('tendré que dejar de luchar siuuuu')
-            # TODO meter audio de fue muy bonito estar en madrid
+        if spotify_command(q):
+            spotify_main(q)
             break
 
 
