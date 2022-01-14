@@ -2,7 +2,7 @@
 
 ## Requisitos
 
-- Python 3.6+
+- Python 3.7.9 o menor (Por Pytorch)
 - Microsoft Visual C++ 14.0 (Usar Visual Studio Build Tools)
 - FFmpeg (https://es.wikihow.com/instalar-FFmpeg-en-Windows)
 

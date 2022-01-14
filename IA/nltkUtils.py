@@ -1,4 +1,5 @@
 import nltk
+import numpy as np
 
 
 def tokenize(sentence):
@@ -6,4 +7,9 @@ def tokenize(sentence):
 
 
 def bagOfWords(tokenizedSentence, allWords):
-    pass
+    bag = np.zeros(len(allWords), dtype=np.float32)
+    for index, w in enumerate(allWords):
+        if w in tokenizedSentence:
+            bag[index] = 1.0
+
+    return bag
