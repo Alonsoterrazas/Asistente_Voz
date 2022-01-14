@@ -2,7 +2,7 @@ import json
 import os
 import torch
 import torch.nn as nn
-from AssistantDataSet import AssistantDataSet
+from assistantDataSet import AssistantDataSet
 from model import NeuralNet
 from nltkUtils import tokenize, bagOfWords
 import numpy as np
@@ -80,7 +80,7 @@ data = {
     'input_size': inputSize,
     'output_size': outputSize,
     'hidden_size': hiddenSize,
-    'all_worlds': allWords,
+    'all_words': allWords,
     'tags': tags
 }
 
