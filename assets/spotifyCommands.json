@@ -1,0 +1,68 @@
+{
+  "commands": [
+    {
+      "name": "spotify001",
+      "description": "Reproduce una cancion, album, playlist o canciones de un artista"
+    },
+    {
+      "name": "spotify002",
+      "description": "Pasa la siguiente cancion"
+    },
+    {
+      "name": "spotify003",
+      "description": "Regresa el playback a la cancion anterior"
+    },
+    {
+      "name": "spotify004",
+      "description": "Activa el modo aleatorio"
+    },
+    {
+      "name": "spotify005",
+      "description": "Desactiva el modo aleatorio"
+    },
+    {
+      "name": "spotify006",
+      "description": "Pausa la cancion que este sonando"
+    },
+    {
+      "name": "spotify007",
+      "description": "Reanuda la cancion, pone play si hay pausa"
+    },
+    {
+      "name": "spotify008",
+      "description": "Sube el volumen del spotify"
+    },
+    {
+      "name": "spotify009",
+      "description": "Baja el volumen del spotify"
+    },
+    {
+      "name": "spotify010",
+      "description": "Agrega una cancion a la cola"
+    },
+    {
+      "name": "spotify011",
+      "description": "Cambia el dispositivo donde suena spotify"
+    },
+    {
+      "name": "spotify012",
+      "description": "Reproduce una playlist"
+    },
+    {
+      "name": "spotify013",
+      "description": "Agrega una cancion a una playlist"
+    },
+    {
+      "name": "spotify014",
+      "description": "Crea una playlist"
+    },
+    {
+      "name": "spotify015",
+      "description": "Agrega la cancion actualmente sonando a una playlist"
+    },
+    {
+      "name": "spotify016",
+      "description": "Quita la cancion actualmente sonando de la playlist"
+    }
+  ]
+}

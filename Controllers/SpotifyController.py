@@ -24,6 +24,7 @@ def spotify_main(q):
         return
 
     # Reproducir una canción
+    # TODO Cuando diga reproduce no solamente sean canciones, puedan ser playlists, albumes o rolas de un artista
     if re.match(reRepro, q):
         if not validaDispositivos():
             voz('No tienes ningun dispositivo activo')

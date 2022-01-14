@@ -1,0 +1,132 @@
+{
+  "intents": [
+    {
+      "tag": "spotify001",
+      "patterns": [
+        "reproduce en spotify",
+        "pon en spotify"
+      ]
+    },
+    {
+      "tag": "spotify002",
+      "patterns": [
+        "salta la canción",
+        "salta esa canción",
+        "sáltala",
+        "siguiente canción"
+      ]
+    },
+    {
+      "tag": "spotify003",
+      "patterns": [
+        "regresa la canción",
+        "vuelve a reproducir la anterior",
+        "reproduce otra vez la anterior"
+      ]
+    },
+    {
+      "tag": "spotify004",
+      "patterns": [
+        "activa el modo aleatorio",
+        "pon modo aleatorio",
+        "prende el modo aleatorio"
+      ]
+    },
+    {
+      "tag": "spotify005",
+      "patterns": [
+        "desactiva el modo aleatorio",
+        "apaga el modo aleatorio",
+        "quita el modo aleatorio"
+      ]
+    },
+    {
+      "tag": "spotify006",
+      "patterns": [
+        "pausa la canción",
+        "ponle pausa",
+        "pon pausa"
+      ]
+    },
+    {
+      "tag": "spotify007",
+      "patterns": [
+        "reanuda la canción",
+        "ponle play",
+        "pon play"
+      ]
+    },
+    {
+      "tag": "spotify008",
+      "patterns": [
+        "sube el volumen",
+        "súbele el volumen"
+      ]
+    },
+    {
+      "tag": "spotify009",
+      "patterns": [
+        "baja el volumen",
+        "bajale el volumen"
+      ]
+    },
+    {
+      "tag": "spotify010",
+      "patterns": [
+        "agrega a la cola",
+        "mete a la cola",
+        "pon en la cola",
+        "añade a la cola"
+      ]
+    },
+    {
+      "tag": "spotify011",
+      "patterns": [
+        "reproduce spotify en el",
+        "reproduce spotify en la",
+        "pasa el spotify a la",
+        "reproduce las canciones en"
+      ]
+    },
+    {
+      "tag": "spotify012",
+      "patterns": [
+        "reproduce la playlist en spotify",
+        "pon la playlist en spotify"
+      ]
+    },
+    {
+      "tag": "spotify013",
+      "patterns": [
+        "agrega a la playlist",
+        "añade a la playlist",
+        "mete a la playlist",
+        "pon a la playlist"
+      ]
+    },
+    {
+      "tag": "spotify014",
+      "patterns": [
+        "crea una playlist llamada",
+        "haz una playlist"
+      ]
+    },
+    {
+      "tag": "spotify015",
+      "patterns": [
+        "agrega esta canción a la playlist",
+        "añade esa canción en la playlist",
+        "mete la canción que suena a la playlist",
+        "pon esa canción en la playlist"
+      ]
+    },
+    {
+      "tag": "spotify016",
+      "patterns": [
+        "saca esta canción de la playlist",
+        "quita esa canción de la playlist",
+        "saca la canción que suena de la playlist",
+      ]
+    }
+  ]
+}
