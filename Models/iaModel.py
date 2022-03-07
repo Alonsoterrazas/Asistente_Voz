@@ -30,8 +30,13 @@ def predictCommand(sentence):
     tag = tags[predicted.item()]
 
     probs = torch.softmax(output, dim=1)
-    prob = probs[0][predicted.item()]
-    if prob.item() > 0.75:
+    probs = probs[0]
+    cont = 0
+    for p in probs:
+        print(f'{tags[cont]} -> prob = {p}')
+        cont += 1
+    prob = probs[predicted.item()]
+    if prob.item() > 0.65:
         return tag
 
     return None

@@ -7,20 +7,40 @@ from model import NeuralNet
 from nltkUtils import tokenize, bagOfWords
 import numpy as np
 from torch.utils.data import DataLoader
+import mysql.connector
+from mysql.connector import OperationalError
 
-with open('intents.json', 'r', encoding='utf-8') as f:
-    intents = json.load(f)
+
+def getIntents():
+    connection = mysql.connector.connect(
+        host='137.184.125.49',
+        user='usertesting',
+        password='Va5PKAtv8RCQbcgY',
+        database='dataset'
+    )
+
+    try:
+        cursor = connection.cursor()
+    except OperationalError:
+        connection.reconnect()
+        cursor = connection.cursor()
+
+    cursor.execute('SELECT tag, pattern FROM trainData')
+    intentsDB = cursor.fetchall()
+
+    return intentsDB
+
+
+intents = getIntents()
 
 allWords = []
 tags = []
 xy = []
-for intent in intents['intents']:
-    tag = intent['tag']
-    tags.append(tag)
-    for pattern in intent['patterns']:
-        w = tokenize(pattern)
-        allWords.extend(w)
-        xy.append((w, tag))
+for intent in intents:
+    tags.append(intent[0])
+    w = tokenize(intent[1])
+    allWords.extend(w)
+    xy.append((w, intent[0]))
 
 ignoreWords = ['?', '!', ',', '.']
 allWords = [w for w in allWords if w not in ignoreWords]
@@ -71,7 +91,7 @@ for epoch in range(numEpochs):
         optimizer.step()
 
     if (epoch + 1) % 100 == 0:
-        print(f'epoch {epoch+1}/{numEpochs}, loss={loss.item():.4f}')
+        print(f'epoch {epoch + 1}/{numEpochs}, loss={loss.item():.4f}')
 
 print(f'final loss, loss={loss.item():.4f}')
 
@@ -93,3 +113,4 @@ except FileNotFoundError:
     torch.save(data, f'{PATH}\\{FILE}')
 
 print(f'training complete. file saved to {FILE}')
+

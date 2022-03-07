@@ -1,5 +1,25 @@
 {
   "commands": [
+	{
+		"name":"youtube001",
+		"description":"Reproduce un video en youtube"
+	},
+	{
+		"name":"youtube002",
+		"description":"Descarga el video de youtube que desees"
+	},
+	{
+		"name":"search001",
+		"description":"Busca la letra de la cancion que suene en el momento"
+	},
+	{
+		"name":"search002",
+		"description":"Busca lo que desees en el navegador"
+	},
+	{
+		"name":"games001",
+		"description":"Juega piedra papel o tijeras contigo"
+	},
     {
       "name": "spotify001",
       "description": "Reproduce una cancion, album, playlist o canciones de un artista"
@@ -63,6 +83,10 @@
     {
       "name": "spotify016",
       "description": "Quita la cancion actualmente sonando de la playlist"
+    },
+    {
+      "name": "spotify017",
+      "description": "Reproduce cualquier cosa en spotify"
     }
   ]
 }

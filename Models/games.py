@@ -1,52 +1,32 @@
 import random
-from bicho import call, voz
-from Models.player import reproducir_arch
 
 
-def piedra_papel_tijeras():
+def piedra_papel_tijeras(option):
     posible_actions = ["piedra", "papel", "tijeras"]
     computer_action = random.choice(posible_actions)
-    voz('Que quieres jugar')
 
-    while True:
-        q = call(2)
-        if q:
-            break
-    q = q.lower()
-
-    print(q)
-    respuesta = [e for e in posible_actions if e in q]
+    respuesta = [e for e in posible_actions if e in option]
     if len(respuesta) == 1:
         respuesta = respuesta[0]
         if respuesta == computer_action:
-            voz(f"{computer_action}. es un empate")
-            return
+            return computer_action, 0
         if respuesta == "piedra":
             if computer_action == "tijeras":
-                voz(f"{computer_action}. haz ganado!")
+                return computer_action, 1
             else:
-                voz(f"{computer_action}. gané")
-                reproducir_arch('Siu')
-            return
+                return computer_action, 2
         if respuesta == "papel":
             if computer_action == "piedra":
-                voz(f"{computer_action}. haz ganado!")
+                return computer_action, 1
             else:
-                voz(f"{computer_action}. gané")
-                reproducir_arch('Siu')
-            return
+                return computer_action, 2
         if respuesta == "tijeras":
-            if computer_action == "piedra":
-                voz(f"{computer_action}. gané")
-                reproducir_arch('Siu')
+            if computer_action == "papel":
+                return computer_action, 1
             else:
-                voz(f"{computer_action}. haz ganado!")
-            return
+                return computer_action, 2
 
     if len(respuesta) > 1:
-        voz('Dejate de mamadas y di uno nomas')
-        piedra_papel_tijeras()
-        return
+        return computer_action, -1
 
-    voz('Dejate de mamadas y di algo bien')
-    piedra_papel_tijeras()
+    return computer_action, -2
