@@ -9,14 +9,14 @@ import numpy as np
 from torch.utils.data import DataLoader
 import mysql.connector
 from mysql.connector import OperationalError
-
+from decouple import config
 
 def getIntents():
     connection = mysql.connector.connect(
-        host='137.184.125.49',
-        user='usertesting',
-        password='Va5PKAtv8RCQbcgY',
-        database='dataset'
+        host=config('DB_HOST'),
+        user=config('DB_USER'),
+        password=config('DB_PASSWORD'),
+        database=config('DB_DATABASE')
     )
 
     try:
