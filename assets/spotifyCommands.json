@@ -83,10 +83,6 @@
     {
       "name": "spotify016",
       "description": "Quita la cancion actualmente sonando de la playlist"
-    },
-    {
-      "name": "spotify017",
-      "description": "Reproduce cualquier cosa en spotify"
     }
   ]
 }

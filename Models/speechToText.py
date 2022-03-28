@@ -6,5 +6,5 @@ r = sr.Recognizer()
 
 def audioToText(audio):
     text = r.recognize_google(audio, language="es")
-    response = assist.querying(text)
+    response = assist.querying(text.lower())
     return response

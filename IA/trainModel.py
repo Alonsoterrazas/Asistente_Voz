@@ -1,4 +1,3 @@
-import json
 import os
 import torch
 import torch.nn as nn
@@ -10,6 +9,7 @@ from torch.utils.data import DataLoader
 import mysql.connector
 from mysql.connector import OperationalError
 from decouple import config
+
 
 def getIntents():
     connection = mysql.connector.connect(
@@ -37,7 +37,11 @@ allWords = []
 tags = []
 xy = []
 for intent in intents:
-    tags.append(intent[0])
+    try:
+        tags.index(intent[0])
+    except ValueError:
+        tags.append(intent[0])
+
     w = tokenize(intent[1])
     allWords.extend(w)
     xy.append((w, intent[0]))
@@ -64,7 +68,7 @@ hiddenSize = 8
 outputSize = len(tags)
 inputSize = len(XTrain[0])
 learning_rate = 0.001
-numEpochs = 1000
+numEpochs = 250
 
 dataset = AssistantDataSet(XTrain, YTrain)
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, num_workers=0)
@@ -90,7 +94,7 @@ for epoch in range(numEpochs):
         loss.backward()
         optimizer.step()
 
-    if (epoch + 1) % 100 == 0:
+    if (epoch + 1) % 10 == 0:
         print(f'epoch {epoch + 1}/{numEpochs}, loss={loss.item():.4f}')
 
 print(f'final loss, loss={loss.item():.4f}')

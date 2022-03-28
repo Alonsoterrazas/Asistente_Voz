@@ -27,9 +27,10 @@ def listen_action():
             with concurrent.futures.ThreadPoolExecutor() as thread:
                 returnValue = thread.submit(audioToText, audio)
                 returnValue = returnValue.result()
-                talk(returnValue)
+                if returnValue is not None:
+                    talk(returnValue)
         except sr.UnknownValueError:
-            return "No entendí"
+            return talk("No entendí")
         except sr.RequestError:
-            return "Ocurrió un error. verifique su connexion a internet"
+            return talk("Ocurrió un error. verifique su connexion a internet")
 

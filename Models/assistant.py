@@ -1,8 +1,9 @@
 import pywhatkit
 import re
+from Models.iaModel import predictCommand
+from Options.Spotify.spotifyController import spotify_main, buscaLetra
 
 # from Models.games import piedra_papel_tijeras
-# from Controllers.SpotifyController import spotify_main, buscaLetra
 
 
 regexYT = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
@@ -10,6 +11,9 @@ regexYT = r'\b(?:reproduce)\s[a-z0-9\s]+\s(?:en)\s(?:youtube)'
 
 def querying(query):
     print(query)
+    # command = predictCommand(query)
+    # print(command)
+
     if re.match(regexYT, query):
         index = query.find('en')
         query = query[10:index]
@@ -18,11 +22,11 @@ def querying(query):
 
     if 'busca' in query:
         # Buscar la letra de la cancion que suena
-        if query == 'busca la letra de esa canción':
-            # nombre = buscaLetra()
-            # if nombre:
-            #     pywhatkit.search(f'{nombre} lyrics')
-            #     return f'Buscando la letra de {nombre}.'
+        if query == 'busca la letra de esa canción' or 'busca la letra de esta canción':
+            nombre = buscaLetra()
+            if nombre:
+                pywhatkit.search(f'{nombre} lyrics')
+                return f'Buscando la letra de {nombre}.'
             return 'No detecto ninguna canción en spotify sonando.'
 
         query = query[6:]
@@ -45,29 +49,12 @@ def querying(query):
         return
 
     if spotify_command(query):
-        #
-        # spotify_main(query)
-        return
+        return spotify_main(query)
 
 
 def spotify_command(q):
-    if 'spotify' in q:
-        return True
-    if 'volumen' in q:
-        return True
-    if 'modo aleatorio' in q:
-        return True
-    if 'playlist' in q:
-        return True
-    if 'la cola' in q:
-        return True
-    if 'pausa' in q:
-        return True
-    if 'ponle play' in q:
-        return True
-    if 'quita esa madre' in q:
-        return True
-    return False
+    return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
+           or 'pausa' or 'ponle play' or 'quita esa madre' in q
 
 
 def play_rockScissorsAndPaper():
