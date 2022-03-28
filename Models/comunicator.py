@@ -1,10 +1,11 @@
 import pyttsx3
 import speech_recognition as sr
 import concurrent.futures
-from Models.speechToText import audioToText
+from Models.speechToText import SpeechToText
 
 
 r = sr.Recognizer()
+stt = SpeechToText()
 
 engine = pyttsx3.init()
 # rate = engine.getProperty('rate')
@@ -23,14 +24,8 @@ def talk(message):
 def listen_action():
     with sr.Microphone() as fuente:
         audio = r.listen(fuente)
-        try:
-            with concurrent.futures.ThreadPoolExecutor() as thread:
-                returnValue = thread.submit(audioToText, audio)
-                returnValue = returnValue.result()
-                if returnValue is not None:
-                    talk(returnValue)
-        except sr.UnknownValueError:
-            return talk("No entendí")
-        except sr.RequestError:
-            return talk("Ocurrió un error. verifique su connexion a internet")
-
+        with concurrent.futures.ThreadPoolExecutor() as thread:
+            returnValue = thread.submit(stt.audioToTextFromGoogle, audio)
+            returnValue = returnValue.result()
+            if returnValue is not None:
+                talk(returnValue)
