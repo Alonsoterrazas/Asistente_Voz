@@ -2,7 +2,6 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.exceptions import SpotifyException
 from decouple import config
-import time
 import re
 import requests
 from Models.storeData import getObjectFromPickle, saveObjectOnPickle
@@ -26,9 +25,9 @@ regexsuri = r'\b(?:spotify:track:)[A-Za-z0-9]+'
 # 1 en caso de exito
 # 0 si la cancion se encuentra reproduciendose
 # -2 si algun error interno ocurre
-def reproducirCancion(cancion):
+def playSong(cancion):
     try:
-        track = obtenerURICancion(cancion)
+        track = getURITrack(cancion)
 
         cp = sp.currently_playing()
         # Existe cancion reproduciendose
@@ -43,12 +42,26 @@ def reproducirCancion(cancion):
         return -2
 
 
-def cancion_actual():
+# Reproduce una playlist
+# Regresa
+# -1 si no encuentra la playlist
+# 1 en caso de exito
+def playPlaylist(playlist):
+    playlists = sp.current_user_playlists()
+    playlists = playlists['items']
+    playlists = [pl for pl in playlists if pl['name'].lower() == playlist]
+    if len(playlists) == 0:
+        return -1
+    sp.start_playback(context_uri=playlists[0]['uri'])
+    return 1
+
+
+def currentSong():
     cp = sp.currently_playing()
     return cp['item']['uri']
 
 
-def reanudar_playback():
+def resumePlayback():
     try:
         sp.start_playback()
         return True
@@ -56,11 +69,7 @@ def reanudar_playback():
         return False
 
 
-def siguiente_cancion():
-    sp.next_track()
-
-
-def pausar_playback():
+def pausePlayback():
     try:
         sp.pause_playback()
         return True
@@ -68,18 +77,26 @@ def pausar_playback():
         return False
 
 
-def dispositivos():
-    dis = sp.devices()
-    dis = dis['devices']
-    return dis
-
-
-def validaDispositivos():
-    devices = sp.devices()
-    devices = devices['devices']
-    if len(devices) == 0:
+def nextSong():
+    try:
+        sp.next_track()
+        return True
+    except SpotifyException:
         return False
-    activeDevices = [d for d in devices if d['is_active']]
+
+
+def devices():
+    devs = sp.devices()
+    devs = devs['devices']
+    return devs
+
+
+def validateDevicesActive():
+    devs = sp.devices()
+    devs = devs['devices']
+    if len(devs) == 0:
+        return False
+    activeDevices = [d for d in devs if d['is_active']]
     if len(activeDevices) == 0:
         return False
     return True
@@ -89,16 +106,16 @@ def get_token():
     print(sa.get_access_token())
 
 
-def get_shuffle_state():
+def getShuffleState():
     x = sp.current_playback()
     return x['shuffle_state']
 
 
-def shuffle(state):
+def setShuffleState(state):
     sp.shuffle(state=state)
 
 
-def playlist_actual():
+def currentPlaylist():
     x = sp.current_playback()
     x = x['context']
     if not x:
@@ -113,7 +130,7 @@ def playlist_actual():
     return playlists[0]['name']
 
 
-def repetir():
+def repeat():
     x = sp.current_playback()
     if x:
         x = x['repeat_state']
@@ -128,15 +145,15 @@ def repetir():
 # 0 en caso de exito
 # -1 si no se menciono ningun apodo valido
 # -2 si no encontro ningun dispositivo activo
-def cambiar_dispositivo(device):
+def changeDevice(device):
     nicknamesPhone = ['teléfono', 'cel', 'celular']
     nicknamesPC = ['pc', 'computadora', 'laptop', 'compu']
     nicknamesBocinas = ['bocina']
 
-    userDevices = dispositivos()
-    devicesEncontrados = [d for d in userDevices if d['name'] == device]
-    if len(devicesEncontrados) > 0:
-        sp.transfer_playback(device_id=devicesEncontrados[0]['id'], force_play=True)
+    userDevices = devices()
+    devicesFounded = [d for d in userDevices if d['name'] == device]
+    if len(devicesFounded) > 0:
+        sp.transfer_playback(device_id=devicesFounded[0]['id'], force_play=True)
         return 0
 
     typeToFound = ''
@@ -149,43 +166,29 @@ def cambiar_dispositivo(device):
     if typeToFound == '':
         return -1
 
-    devicesEncontrados = [d for d in userDevices if d['type'] == typeToFound]
-    if len(devicesEncontrados) == 0:
+    devicesFounded = [d for d in userDevices if d['type'] == typeToFound]
+    if len(devicesFounded) == 0:
         return -2
-    sp.transfer_playback(device_id=devicesEncontrados[0]['id'], force_play=True)
+    sp.transfer_playback(device_id=devicesFounded[0]['id'], force_play=True)
     return 0
 
 
-def agregar_en_cola(cancion):
-    track = obtenerURICancion(cancion)
+def addToQueue(cancion):
+    track = getURITrack(cancion)
     sp.add_to_queue(track)
 
 
-def regresar_cancion():
+def previousTrack():
     sp.previous_track()
 
 
-def cambiar_volumen(valor):
+def controlVolumen(valor):
     volume = sp.current_playback()['device']['volume_percent']
     volume += valor
     sp.volume(volume)
 
 
-# Reproduce una playlist
-# Regresa
-# -1 si no encuentra la playlist
-# 1 en caso de exito
-def reproducir_playlist(playlist):
-    playlists = sp.current_user_playlists()
-    playlists = playlists['items']
-    playlists = [pl for pl in playlists if pl['name'].lower() == playlist]
-    if len(playlists) == 0:
-        return -1
-    sp.start_playback(context_uri=playlists[0]['uri'])
-    return 1
-
-
-def agregar_cancion_pl(cancion, playlist):
+def addSongToPlaylist(track, playlist):
     playlists = sp.current_user_playlists()
     playlists = playlists['items']
     playlists = [pl for pl in playlists if pl['name'].lower() == playlist]
@@ -193,15 +196,15 @@ def agregar_cancion_pl(cancion, playlist):
         return -1
     pl_id = playlists[0]['id']
 
-    track = cancion
-    if not re.match(regexsuri, cancion):
-        track = obtenerURICancion(cancion)
+    track = track
+    if not re.match(regexsuri, track):
+        track = getURITrack(track)
 
     sp.playlist_add_items(playlist_id=pl_id, items=[track])
     return 1
 
 
-def borrar_cancion(cancion, playlist):
+def deleteSongOnPlaylist(track, playlist):
     playlists = sp.current_user_playlists()
     playlists = playlists['items']
     playlists = [pl for pl in playlists if pl['name'] == playlist]
@@ -209,12 +212,12 @@ def borrar_cancion(cancion, playlist):
         return -1
     pl_id = playlists[0]['id']
 
-    if re.match(regexsuri, cancion):
-        uri = cancion
+    if re.match(regexsuri, track):
+        uri = track
     else:
         tracks = sp.playlist_items(playlist_id=pl_id)
         tracks = tracks['items']
-        track = [t for t in tracks if t['track']['name'].lower() == cancion]
+        track = [t for t in tracks if t['track']['name'].lower() == track]
         if len(track) == 0:
             return -2
         track = track[0]['track']
@@ -234,51 +237,51 @@ def borrar_cancion(cancion, playlist):
     return 1
 
 
-def crear_playlist(nombre):
+def createPlaylist(name):
     user = sp.current_user()
-    sp.user_playlist_create(user=user['id'], name=nombre)
+    sp.user_playlist_create(user=user['id'], name=name)
 
 
-def obtenerURICancion(nombre):
+def getURITrack(name):
     # Buscar en canciones guardadas
-    cancionesGuardadas = getObjectFromPickle('savedTracks')
-    if not cancionesGuardadas:
-        if guardarCanciones():
-            cancionesGuardadas = getObjectFromPickle('savedTracks')
+    savedTracks = getObjectFromPickle('savedTracks')
+    if not savedTracks:
+        if saveTracks():
+            savedTracks = getObjectFromPickle('savedTracks')
         else:
             # Si falla el metodo guardar canciones no se toma en cuenta
-            cancionesGuardadas = []
+            savedTracks = []
 
-    cancionesEncontradas = \
-        [track['track'] for track in cancionesGuardadas if track['track']['name'].lower() == nombre.lower()]
-    if len(cancionesEncontradas) == 0:
-        cancionesBusqueda = sp.search(q=f'track:{nombre}', type='track')
-        cancionesBusqueda = cancionesBusqueda['tracks']['items']
+    tracksFounded = \
+        [track['track'] for track in savedTracks if track['track']['name'].lower() == name.lower()]
+    if len(tracksFounded) == 0:
+        tracksSearch = sp.search(q=f'track:{name}', type='track')
+        tracksSearch = tracksSearch['tracks']['items']
         # Buscar por artista
-        artistasGuardados = getObjectFromPickle('savedArtistas')
-        if not artistasGuardados:
-            if guardarArtistas():
-                artistasGuardados = getObjectFromPickle('savedArtistas')
+        savedArtists = getObjectFromPickle('savedArtistas')
+        if not savedArtists:
+            if saveArtists():
+                savedArtists = getObjectFromPickle('savedArtistas')
             else:
                 # Mismo caso que las canciones
-                artistasGuardados = []
+                savedArtists = []
 
-        artistasUris = [artista['uri'] for artista in artistasGuardados]
-        cancionesEncontradas = \
-            [track for track in cancionesBusqueda if track['artists'][0]['uri'] in artistasUris]
-        if len(cancionesEncontradas) > 0:
-            return cancionesEncontradas[0]['uri']
+        artistasUris = [artista['uri'] for artista in savedArtists]
+        tracksFounded = \
+            [track for track in tracksSearch if track['artists'][0]['uri'] in artistasUris]
+        if len(tracksFounded) > 0:
+            return tracksFounded[0]['uri']
 
         # La mas popular que encuentre
-        return cancionesBusqueda[0]['uri']
+        return tracksSearch[0]['uri']
 
-    if len(cancionesEncontradas) > 1:
-        cancionesEncontradas = sorted(cancionesEncontradas, key=lambda i: i['popularity'])
+    if len(tracksFounded) > 1:
+        tracksFounded = sorted(tracksFounded, key=lambda i: i['popularity'])
 
-    return cancionesEncontradas[0]['uri']
+    return tracksFounded[0]['uri']
 
 
-def guardarCanciones():
+def saveTracks():
     cont = 0
     cantCanciones = 1
     savedTracks = []
@@ -292,7 +295,21 @@ def guardarCanciones():
     return saveObjectOnPickle(savedTracks, 'savedTracks')
 
 
-def guardarArtistas():
+def savePlaylists():
+    cont = 0
+    cantPlaylists = 1
+    savedPlaylists = []
+    while cantPlaylists != 0:
+        playlist = sp.current_user_playlists(limit=50, offset=(cont * 50))
+        playlist = playlist['items']
+        savedPlaylists.extend(playlist)
+        cantPlaylists = len(playlist)
+        cont += 1
+
+    return saveObjectOnPickle(savedPlaylists, 'savedPlaylists')
+
+
+def saveArtists():
     cont = 0
     cantArtistas = 1
     savedArtistas = []
@@ -306,7 +323,10 @@ def guardarArtistas():
     saveObjectOnPickle(savedArtistas, 'savedArtistas')
 
 
-def getNameSongPlaying():
+def getNameCurrentTrack():
     current = sp.currently_playing()
     name = current['item']['name']
     return name
+
+
+savePlaylists()

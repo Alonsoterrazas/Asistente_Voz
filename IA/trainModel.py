@@ -1,4 +1,3 @@
-import json
 import os
 import torch
 import torch.nn as nn
@@ -7,20 +6,45 @@ from model import NeuralNet
 from nltkUtils import tokenize, bagOfWords
 import numpy as np
 from torch.utils.data import DataLoader
+import mysql.connector
+from mysql.connector import OperationalError
+from decouple import config
 
-with open('intents.json', 'r', encoding='utf-8') as f:
-    intents = json.load(f)
+
+def getIntents():
+    connection = mysql.connector.connect(
+        host=config('DB_HOST'),
+        user=config('DB_USER'),
+        password=config('DB_PASSWORD'),
+        database=config('DB_DATABASE')
+    )
+
+    try:
+        cursor = connection.cursor()
+    except OperationalError:
+        connection.reconnect()
+        cursor = connection.cursor()
+
+    cursor.execute('SELECT tag, pattern FROM trainData')
+    intentsDB = cursor.fetchall()
+
+    return intentsDB
+
+
+intents = getIntents()
 
 allWords = []
 tags = []
 xy = []
-for intent in intents['intents']:
-    tag = intent['tag']
-    tags.append(tag)
-    for pattern in intent['patterns']:
-        w = tokenize(pattern)
-        allWords.extend(w)
-        xy.append((w, tag))
+for intent in intents:
+    try:
+        tags.index(intent[0])
+    except ValueError:
+        tags.append(intent[0])
+
+    w = tokenize(intent[1])
+    allWords.extend(w)
+    xy.append((w, intent[0]))
 
 ignoreWords = ['?', '!', ',', '.']
 allWords = [w for w in allWords if w not in ignoreWords]
@@ -44,7 +68,7 @@ hiddenSize = 8
 outputSize = len(tags)
 inputSize = len(XTrain[0])
 learning_rate = 0.001
-numEpochs = 1000
+numEpochs = 250
 
 dataset = AssistantDataSet(XTrain, YTrain)
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, num_workers=0)
@@ -70,8 +94,8 @@ for epoch in range(numEpochs):
         loss.backward()
         optimizer.step()
 
-    if (epoch + 1) % 100 == 0:
-        print(f'epoch {epoch+1}/{numEpochs}, loss={loss.item():.4f}')
+    if (epoch + 1) % 10 == 0:
+        print(f'epoch {epoch + 1}/{numEpochs}, loss={loss.item():.4f}')
 
 print(f'final loss, loss={loss.item():.4f}')
 
@@ -93,3 +117,4 @@ except FileNotFoundError:
     torch.save(data, f'{PATH}\\{FILE}')
 
 print(f'training complete. file saved to {FILE}')
+
