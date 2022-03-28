@@ -2,8 +2,7 @@ import pywhatkit
 import re
 from Models.iaModel import predictCommand
 from Options.Spotify.spotifyController import spotify_main, buscaLetra
-
-# from Models.games import piedra_papel_tijeras
+from Options.games import Games
 
 
 class Assistant:
@@ -13,10 +12,15 @@ class Assistant:
         self.bandActive = False
         self.nameAssistant = 'bicho'
 
+        self.games = Games()
+
     def querying(self, query):
         print(query)
         # command = predictCommand(query)
         # print(command)
+        if self.games.currentGame is not None:
+            return self.games.play(query)
+
         if query.startswith(self.nameAssistant):
             # Remove first word
             query = query.split(' ', 1)[1]
@@ -58,8 +62,8 @@ class Assistant:
         #     break
 
         if 'piedra papel o tijera' in query:
-            # piedra_papel_tijeras()
-            return
+            self.games.startGame('ppt')
+            return 'Muy bien. Comencemos el duelo. ¿Que vas a jugar?'
 
         if self.spotify_command(query):
             self.bandActive = False
