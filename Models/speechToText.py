@@ -21,3 +21,6 @@ class SpeechToText:
         except sr.RequestError:
             if self.assistant.bandActive:
                 return "Ocurrió un error. verifique su conexion a internet"
+
+        return None
+
