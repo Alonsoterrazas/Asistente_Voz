@@ -1,8 +1,9 @@
-import pywhatkit
 import re
-from Models.iaModel import predictCommand
+
+import pywhatkit
 from Options.Spotify.spotifyController import spotify_main, buscaLetra
 from Options.games import Games
+from Models.iaModel import IaModel
 
 
 class Assistant:
@@ -13,11 +14,15 @@ class Assistant:
         self.nameAssistant = 'bicho'
 
         self.games = Games()
+        self.iaModel = IaModel()
 
     def querying(self, query):
         print(query)
-        # command = predictCommand(query)
-        # print(command)
+
+        if self.iaModel.active:
+            command = self.iaModel.predictCommand(query)
+            print(command)
+
         if self.games.currentGame is not None:
             return self.games.play(query)
 
@@ -70,7 +75,7 @@ class Assistant:
             return spotify_main(query)
 
     def spotify_command(self, q):
-        return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola'\
+        return 'spotify' or 'volumen' or 'modo aleatorio' or 'canción' or 'playlist' or 'la cola' \
                or 'pausa' or 'ponle play' or 'quita esa madre' in q
 
     def play_rockScissorsAndPaper(self):
